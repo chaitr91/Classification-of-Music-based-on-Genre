@@ -12,15 +12,15 @@ SOUND_SAMPLE_LENGTH = 30000
 HAMMING_SIZE = 100
 HAMMING_STRIDE = 40
 
-labelsDict = {
-    'blues'     :   0,
-    'classical' :   1,
-    'jazz'      :   2,
-    'metal'     :   3,
-    'pop'       :   4,
-    'rock'      :   5
+labelDict = {
+    
+    'classical' :   0,
+    'club'      :   1,
+    'dance'     :   2,
+    'edm'       :   3,
+    'heavy-metal'      :   4,
+    'tango'     :   5,
 }
-
 
 def die_with_usage():
     """ HELP MENU """
@@ -55,26 +55,19 @@ def prepossessingAudio(audioPath, ppFilePath):
         melfeaturesArray = []
         mfccfeaturesArray = []
         for i in range(0, SOUND_SAMPLE_LENGTH, HAMMING_STRIDE):
-            if i + HAMMING_SIZE <= SOUND_SAMPLE_LENGTH - 1:
-                y, sr = librosa.load(audioPath, offset=i / 1000.0, duration=HAMMING_SIZE / 1000.0)
+            if i + HAMMING_SIZE < SOUND_SAMPLE_LENGTH:
+                # Since frame size is greater than frame stride each frame will overlap with the previous frame
+                print(i)
+                x, fs = librosa.load(audioPath, offset=i / 1000, duration=HAMMING_SIZE / 1000)
+                # mel-scaled power spectrogram
+                ms = librosa.feature.melspectrogram(x, sr=fs, n_mels=128)
 
-                # Let's make and display a mel-scaled power (energy-squared) spectrogram
-                S = librosa.feature.melspectrogram(y, sr=sr, n_mels=128)
-
-                # Convert to log scale (dB). We'll use the peak power as reference.
-                log_S = librosa.logamplitude(S, ref_power=np.max)
-
-
-
-                mfcc = librosa.feature.mfcc(S=log_S, sr=sr, n_mfcc=13)
-                melfeaturesArray.append(S)
-
-                mfccfeaturesArray.append(mfcc)
-                if len(mfccfeaturesArray) == 599:
+                melfeatureArray.append(ms)
+                if len(melfeatureList) == 599:
                     break
-
-
+  
         data[0] = melfeaturesArray
+        print('done pre')
 
     n_input = 599 * 128 * 5
     n_classes = 6

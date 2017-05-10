@@ -1,0 +1,14 @@
+finaldata/
+/.*ckpt
+labelData
+labelData_test
+model.ckpt.data-00000-of-00001
+model.ckpt.index
+model.ckpt.meta
+mel/
+__pycache__/helper_util.cpython-35.pyc
+albinoni-oboe-concertos-vol-2.mp3
+checkpoint
+datalabel      
+datalabels_test 
+de-barro.mp3
